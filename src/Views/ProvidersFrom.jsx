@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import supabseControls from "../hooks/supabseControls";
 import { useProvidersStore } from "../context/providersStore";
 
-export default function Crud () {
+export default function ProvidersFrom () {
   const empyProvider = {
     id: "",
     name: '',
@@ -53,9 +53,12 @@ export default function Crud () {
 
   const handleSelectChange = ( e ) => {
     const selectedProviderId = e.target.value;
-    const selectedProvider = storeProviders.find( provider => provider.id === Number( selectedProviderId ) );
-    setProvider( selectedProvider )
-    setEneableButtonInsert( false )
+    if ( selectedProviderId === 0 ) { setProvider( empyProvider ) }
+    else {
+      const selectedProvider = storeProviders.find( provider => provider.id === Number( selectedProviderId ) );
+      setProvider( selectedProvider )
+      setEneableButtonInsert( false )
+    }
   };
 
   const handleChange = ( e ) => {
@@ -86,9 +89,10 @@ export default function Crud () {
             onChange={handleSelectChange}
             className="w-full p-2 border border-gray-300 rounded-md"
           >
-            {storeProviders.map( ( provider, i ) => (
-              <option key={i} value={provider.id}>
-                {provider.name}
+            <option selected value={0}>--Informante no seleccionado--</option>
+            {storeProviders.map( ( providerStore, i ) => (
+              <option key={i} value={providerStore.id}>
+                {providerStore.name}
               </option>
             ) )}
           </select>
@@ -150,21 +154,24 @@ export default function Crud () {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
             name="opinion_use_plants"
+            value={provider.opinion_use_plants}
           >
+            <option selected value=""></option>
             <option value="Ha aumentado">Ha aumentado</option>
             <option value="Ha disminuido">Ha disminuido</option>
-            <option selected value="Se ha mantenido igual">Se ha mantenido igual</option>
+            <option value="Se ha mantenido igual">Se ha mantenido igual</option>
           </select>
 
           <select
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md"
             name="opinion_use_digital"
-
+            value={provider.opinion_use_digital}
           >
+            <option selected value=""></option>
             <option value="Muy deacuerdo">Muy deacuerdo</option>
             <option value="De acuerdo">De acuerdo</option>
-            <option selected value="Neutral">Neutral</option>
+            <option value="Neutral">Neutral</option>
             <option value="En desacuerdo">En desacuerdo</option>
             <option value="Muy en desacuerdo">Muy en desacuerdo</option>
           </select>
@@ -177,20 +184,26 @@ export default function Crud () {
             >
               {eneableButtonInsert ? 'Insertar' : 'Nuevo Provider'}
             </button>
-            <button
-              type="button"
-              onClick={handleUpdate}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
-            >
-              Actualizar
-            </button>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
-            >
-              Eliminar
-            </button>
+            {
+              !eneableButtonInsert && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleUpdate}
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
+                  >
+                    Actualizar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+                  >
+                    Eliminar
+                  </button>
+                </>
+              )
+            }
           </div>
         </form>
       </div>
