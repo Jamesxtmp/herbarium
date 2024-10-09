@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
@@ -74,6 +75,11 @@ export default function PlantsForm () {
       [name]: value
     } ) );
   }
+  const autoResizeTextarea = ( e ) => {
+    e.target.style.height = 'auto'; // Reinicia la altura
+    e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura según el contenido
+  };
+
   const handleNewPlant = () => {
     setPlant( empyPlant )
     setEneableButtonInsert( true )
@@ -98,105 +104,149 @@ export default function PlantsForm () {
           <div className="flex justify-center mb-4">
             <img className="w-24 h-36 object-cover rounded-md" src={plant.image} alt={plant.name} />
           </div>
-          <select
-            name="plantsSelect"
-            onChange={handleSelectChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option selected value={0}>--Planta no seleccionada--</option>
-            {storePlants.map( ( plantStore, i ) => (
-              <option key={i} value={plantStore.id}>
-                {plantStore.name}
-              </option>
-            ) )}
-          </select>
 
-          <input
-            type="text"
-            name="name"
-            value={plant.name}
-            onChange={handleChange}
-            placeholder="Nombre"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="plantsSelect" className="block mb-2">Selecciona una planta</label>
+            <select
+              id="plantsSelect"
+              name="plantsSelect"
+              onChange={handleSelectChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option selected value={0}>--Planta no seleccionada--</option>
+              {storePlants.map( ( plantStore, i ) => (
+                <option key={i} value={plantStore.id}>
+                  {plantStore.name}
+                </option>
+              ) )}
+            </select>
+          </div>
 
-          <input
-            type="text"
-            name="another_name"
-            value={plant.another_name}
-            onChange={handleChange}
-            placeholder="Otro nombre"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="name" className="block mb-2">Nombre</label>
+            <textarea
+              id="name"
+              name="name"
+              value={plant.name}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
 
-          <input
-            type="text"
-            name="use_part"
-            value={plant.use_part}
-            onChange={handleChange}
-            placeholder="Parte utilizada"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="another_name" className="block mb-2">Nombre indigena/local/cientifico</label>
+            <textarea
+              id="another_name"
+              name="another_name"
+              value={plant.another_name}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
 
-          <input
-            type="text"
-            name="use"
-            value={plant.use}
-            onChange={handleChange}
-            placeholder="Uso medicinal"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="use_part" className="block mb-2">Parte utilizada</label>
+            <textarea
+              id="use_part"
+              name="use_part"
+              value={plant.use_part}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
 
-          <input
-            type="text"
-            name="preparation"
-            value={plant.preparation}
-            onChange={handleChange}
-            placeholder="Preparación"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="use" className="block mb-2">Uso medicinal</label>
+            <textarea
+              id="use"
+              name="use"
+              value={plant.use}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
 
-          <input
-            type="text"
-            name="frecuency"
-            value={plant.frecuency}
-            onChange={handleChange}
-            placeholder="Frecuencia de uso"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="preparation" className="block mb-2">Preparacion</label>
+            <textarea
+              id="preparation"
+              name="preparation"
+              value={plant.preparation}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
 
-          <input
-            type="text"
-            name="warning"
-            value={plant.warning}
-            onChange={handleChange}
-            placeholder="Efectos secundarios"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+          <div>
+            <label htmlFor="frecuency" className="block mb-2">Frecuencia de uso</label>
+            <select
+              id="frecuency"
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              name="frecuency"
+              value={plant.frecuency}
+            >
+              <option selected value=""></option>
+              <option value="Diario">Diario</option>
+              <option value="Semanal">Semanal</option>
+              <option value="Mensual">Mensual</option>
+              <option value="Ocacional">Ocacional</option>
+            </select>
+          </div>
 
-          <input
-            type="text"
-            name="combination"
-            value={plant.combination}
-            onChange={handleChange}
-            placeholder="Posibles combinaciones"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
-          <select
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            name="provider"
-            value={plant.provider}
-          >
-            <option selected value=""></option>
-            {
-              storeProviders.map( ( providerStore, i ) => (
+          <div>
+            <label htmlFor="warning" className="block mb-2">Efectos secundarios o advertencias</label>
+            <textarea
+              id="warning"
+              name="warning"
+              value={plant.warning}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="combination" className="block mb-2">Posible combinacion con otras plantas</label>
+            <textarea
+              id="combination"
+              name="combination"
+              value={plant.combination}
+              onChange={handleChange}
+              rows={1}
+              onInput={autoResizeTextarea}
+              className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="provider" className="block mb-2">Informante</label>
+            <select
+              id="provider"
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              name="provider"
+              value={plant.provider}
+            >
+              <option selected value=""></option>
+              {storeProviders.map( ( providerStore, i ) => (
                 <option key={i} value={providerStore.id}>
                   {providerStore.name}
                 </option>
-              ) )
-            }
-          </select>
+              ) )}
+            </select>
+          </div>
 
           <div className="flex justify-between space-x-2">
             <button
@@ -206,30 +256,27 @@ export default function PlantsForm () {
             >
               {eneableButtonInsert ? 'Insertar' : 'Nueva Planta'}
             </button>
-            {
-              !eneableButtonInsert && (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleUpdate}
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
-                  >
-                    Actualizar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleDelete}
-                    className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
-                  >
-                    Eliminar
-                  </button>
-                </>
-              )
-            }
+            {!eneableButtonInsert && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleUpdate}
+                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
+                >
+                  Actualizar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+                >
+                  Eliminar
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>
     );
-
   }
 }
