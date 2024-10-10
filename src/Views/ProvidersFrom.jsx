@@ -115,7 +115,7 @@ export default function ProvidersFrom () {
                 ¿Está dispuesto a enseñar a otras personas?
               </CheckBoxFrom>
               <CheckBoxFrom checked={agreeUseName} onChange={( e ) => setAgreeUseName( e.target.checked )}>
-                ¿Le gustaría que su conocimiento se preserve a través de la app?
+                ¿Está de acuerdo en que su nombre y conocimiento sean usados en la app?
               </CheckBoxFrom>
             </div>
           )}
