@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import supabseControls from "../hooks/supabseControls";
 import { useProvidersStore } from "../context/providersStore";
+import SelectForm from "../components/SelectForm";
+import InputForm from "../components/InputForm";
+import CheckBoxFrom from "../components/CheckBoxFrom";
 
 export default function ProvidersFrom () {
   const empyProvider = {
@@ -25,6 +28,7 @@ export default function ProvidersFrom () {
 
   const [provider, setProvider] = useState( null );
   const [eneableButtonInsert, setEneableButtonInsert] = useState( false );
+  //-- Check boxes
   const [preserveKnowledge, setPreserveKnowledge] = useState( false );
   const [willingToTeach, setWillingToTeach] = useState( false );
   const [agreeUseName, setAgreeUseName] = useState( false );
@@ -36,16 +40,13 @@ export default function ProvidersFrom () {
   };
 
   const handleInsert = async () => {
-    if ( preserveKnowledge && willingToTeach ) {
-      const updatedProvider = {
-        ...provider,
-        name: agreeUseName ? provider.name : "Comunidad",
-      };
-
-      const ansProvider = await insertProvider( updatedProvider ); // Retorna un arreglo
+    if ( preserveKnowledge && willingToTeach && agreeUseName ) {
+      const ansProvider = await insertProvider( provider ); // Retorna un arreglo
       insertInStoreProviders( ansProvider[0] );
       setProvider( ansProvider[0] );
       setEneableButtonInsert( false );
+    } else {
+      console.log( "Debes haceptar todos los acuerdos" )
     }
   };
 
@@ -87,10 +88,6 @@ export default function ProvidersFrom () {
   useEffect( () => {
     handleStoreProviders();
   }, [] );
-  const autoResizeTextarea = ( e ) => {
-    e.target.style.height = 'auto'; // Reinicia la altura
-    e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura según el contenido
-  };
 
   if ( !provider ) {
     setProvider( empyProvider )
@@ -99,162 +96,27 @@ export default function ProvidersFrom () {
     return (
       <div className="flex justify-center items-center p-6">
         <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
-          <select
-            name="providersSelect"
-            onChange={handleSelectChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option selected value={0}>--Informante no seleccionado--</option>
-            {storeProviders.map( ( providerStore, i ) => (
-              <option key={i} value={providerStore.id}>
-                {providerStore.name}
-              </option>
-            ) )}
-          </select>
-
-          <div>
-            <label htmlFor="name" className="block mb-2">Nombre</label>
-            <textarea
-              id="name"
-              name="name"
-              value={provider.name}
-              onChange={handleChange}
-              rows={1}
-              onInput={autoResizeTextarea}
-              className="w-full p-2 border border-gray-300 rounded-md resize-none"
-            />
-          </div>
-          <div>
-            <label htmlFor="gender" className="block mb-2">Genero</label>
-            <select
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              name="gender"
-              value={provider.gender}
-            >
-              <option selected value=""></option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="occupation" className="block mb-2">Ocupacion</label>
-            <textarea
-              id="occupation"
-              name="occupation"
-              value={provider.occupation}
-              onChange={handleChange}
-              rows={1}
-              onInput={autoResizeTextarea}
-              className="w-full p-2 border border-gray-300 rounded-md resize-none"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="residence" className="block mb-2">Comunidad o Localidad</label>
-            <textarea
-              id="residence"
-              name="residence"
-              value={provider.residence}
-              onChange={handleChange}
-              rows={1}
-              onInput={autoResizeTextarea}
-              className="w-full p-2 border border-gray-300 rounded-md resize-none"
-            />
-          </div>
-          <div>
-            <label htmlFor="experience_time" className="block mb-2">Años usando plantas medicinales</label>
-            <select
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              name="experience_time"
-              value={provider.experience_time}
-            >
-              <option selected value=""></option>
-              <option value="Menos de 5 años">Menos de 5 años</option>
-              <option value="5 - 10 años">5 - 10 años</option>
-              <option value="10 - 20 años">10 - 20 años</option>
-              <option value="Mas de 20 años">Mas de 20 años</option>
-            </select>
-
-          </div>
-
-          <div>
-            <label htmlFor="how_experence" className="block mb-2">Como adquirio su conocimiento</label>
-            <textarea
-              id="how_experence"
-              name="how_experence"
-              value={provider.how_experence}
-              onChange={handleChange}
-              rows={1}
-              onInput={autoResizeTextarea}
-              className="w-full p-2 border border-gray-300 rounded-md resize-none"
-            />
-          </div>
-          <div>
-            <label htmlFor="opinion_use_plants" className="block mb-2">Cambio en el uso de plantas medicinales</label>
-            <select
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              name="opinion_use_plants"
-              value={provider.opinion_use_plants}
-            >
-              <option selected value=""></option>
-              <option value="Ha aumentado">Ha aumentado</option>
-              <option value="Ha disminuido">Ha disminuido</option>
-              <option value="Se ha mantenido igual">Se ha mantenido igual</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="opinion_use_digital" className="block mb-2">Acuerdo con la difucion digital</label>
-            <select
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              name="opinion_use_digital"
-              value={provider.opinion_use_digital}
-            >
-              <option selected value=""></option>
-              <option value="Muy deacuerdo">Muy deacuerdo</option>
-              <option value="De acuerdo">De acuerdo</option>
-              <option value="Neutral">Neutral</option>
-              <option value="En desacuerdo">En desacuerdo</option>
-              <option value="Muy en desacuerdo">Muy en desacuerdo</option>
-            </select>
-          </div>
+          <SelectForm name="providersSelect" options={storeProviders} onChange={handleSelectChange}>Informante:</SelectForm>
+          <InputForm name="name" value={provider.name} onChange={handleChange} >Nombre:</InputForm>
+          <SelectForm name="gender" value={provider.gender} options={["Masculino", "Femenino", "Otro"]} onChange={handleChange} >Genero:</SelectForm>
+          <InputForm name="occupation" value={provider.occupation} onChange={handleChange} >Ocupacion:</InputForm>
+          <InputForm name="residence" value={provider.residence} onChange={handleChange} >Comunidad o Localidad:</InputForm>
+          <SelectForm name="experience_time" value={provider.experience_time} options={["Menos de 5 años", "5 - 10 años", "10 - 20 años", "Mas de 20 años"]} onChange={handleChange} >Años usando plantas medicinales:</SelectForm>
+          <InputForm name="how_experence" value={provider.how_experence} onChange={handleChange} >Como adquirio su conocimiento:</InputForm>
+          <SelectForm name="opinion_use_plants" value={provider.opinion_use_plants} options={["Ha aumentado", "Ha disminuido", "Se ha mantenido igual"]} onChange={handleChange} >Cambio en el uso de plantas medicinales:</SelectForm>
+          <SelectForm name="opinion_use_digital" value={provider.opinion_use_digital} options={["Muy deacuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Muy en desacuerdo"]} onChange={handleChange} >Acuerdo con la difucion digital:</SelectForm>
 
           {eneableButtonInsert && (
             <div className="space-y-4">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={preserveKnowledge}
-                  onChange={( e ) => setPreserveKnowledge( e.target.checked )}
-                  className="mr-2"
-                />
-                <label>Le gustaría que su conocimiento se preserve a través de la app?</label>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={willingToTeach}
-                  onChange={( e ) => setWillingToTeach( e.target.checked )}
-                  className="mr-2"
-                />
-                <label>Está dispuesto a enseñar a otras personas?</label>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={agreeUseName}
-                  onChange={( e ) => setAgreeUseName( e.target.checked )}
-                  className="mr-2"
-                />
-                <label>Está de acuerdo en que su nombre y conocimiento sean usados en la app?</label>
-              </div>
+              <CheckBoxFrom checked={preserveKnowledge} onChange={( e ) => setPreserveKnowledge( e.target.checked )}>
+                ¿Le gustaría que su conocimiento se preserve a través de la app?
+              </CheckBoxFrom>
+              <CheckBoxFrom checked={willingToTeach} onChange={( e ) => setWillingToTeach( e.target.checked )}>
+                ¿Está dispuesto a enseñar a otras personas?
+              </CheckBoxFrom>
+              <CheckBoxFrom checked={agreeUseName} onChange={( e ) => setAgreeUseName( e.target.checked )}>
+                ¿Le gustaría que su conocimiento se preserve a través de la app?
+              </CheckBoxFrom>
             </div>
           )}
 
@@ -265,7 +127,7 @@ export default function ProvidersFrom () {
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
               disabled={eneableButtonInsert && !( preserveKnowledge && willingToTeach )}
             >
-              {eneableButtonInsert ? 'Insertar' : 'Nuevo Provider'}
+              {eneableButtonInsert ? 'Insertar' : 'Nuevo Informante'}
             </button>
 
             {!eneableButtonInsert && (
