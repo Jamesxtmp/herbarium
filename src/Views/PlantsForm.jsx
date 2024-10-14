@@ -88,6 +88,10 @@ export default function PlantsForm () {
     setEneableButtonInsert( true )
     handleCurrentPlant( empyPlant )
     setShowForm( true )
+    window.scrollTo( {
+      top: 0,
+      behavior: 'smooth'
+    } );
   }
   const handleImageChange = async ( event ) => {
     const selectedImage = event.target.files[0]

@@ -88,6 +88,10 @@ export default function ProvidersFrom () {
     setEneableButtonInsert( true );
     handleCurrentProvider( empyProvider )
     setShowForm( true );
+    window.scrollTo( {
+      top: 0,
+      behavior: 'smooth'
+    } );
   };
   useEffect( () => {
     if ( !objectDeepEqual( storeCuerrentProvider, empyProvider ) ) {
