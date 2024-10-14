@@ -14,7 +14,7 @@ export default function ProvidersFrom () {
     gender: "",
     occupation: "",
     residence: "",
-    experience_time: 0,
+    experience_time: "",
     how_experence: "",
     opinion_use_plants: "",
     opinion_use_digital: "",
@@ -100,7 +100,11 @@ export default function ProvidersFrom () {
   if ( storeCuerrentProvider ) {
     return (
       <div className="flex justify-center items-center p-6">
-        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
+        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+          onSubmit={( e ) => {
+            e.preventDefault();
+          }}
+        >
           <SelectForm name="providersSelect" value={storeCuerrentProvider.id} options={storeProviders} onChange={handleSelectProviderChange}>Informante:</SelectForm>
           {showForm && (
             <>

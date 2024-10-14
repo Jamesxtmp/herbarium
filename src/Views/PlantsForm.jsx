@@ -103,7 +103,11 @@ export default function PlantsForm () {
   if ( storeCuerrentPlant ) {
     return (
       <div className="flex justify-center items-center p-6">
-        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
+        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+          onSubmit={( e ) => {
+            e.preventDefault();
+          }}
+        >
           {showForm && (
             <>
               <div className="flex justify-center mb-4">
