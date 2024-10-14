@@ -13,7 +13,7 @@ export const usePlantsStore = create( ( set ) => ( {
     warning: "",
     combination: "",
     provider: "",
-    image: "",
+    image: "https://ognhpnlmvmxlyzqlyolv.supabase.co/storage/v1/object/public/plants/depositphotos_383693018-stock-illustration-herbal-medicine-icon-vector-illustration.jpg",
   },
 
   handleCurrentPlant: ( currentPlant ) => set( ( state ) => ( {

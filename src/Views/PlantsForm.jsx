@@ -9,6 +9,7 @@ import { useProvidersStore } from "../context/providersStore";
 import InputForm from "../components/InputForm";
 import SelectForm from "../components/SelectForm";
 import ButtomTypesGoogle from "../components/ButtomTypesGoogle";
+import { objectDeepEqual } from "../tools/objectDeepEqual";
 
 export default function PlantsForm () {
   const empyPlant = {
@@ -92,7 +93,7 @@ export default function PlantsForm () {
     const selectedImage = event.target.files[0]
   };
   useEffect( () => {
-    if ( storeCuerrentPlant.id != "" ) {
+    if ( !objectDeepEqual( storeCuerrentPlant, empyPlant ) ) {
       setShowForm( true )
     }
   }, [] )
@@ -112,6 +113,7 @@ export default function PlantsForm () {
             <>
               <div className="flex justify-center mb-4">
                 <img className="w-24 h-36 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
+                {/* {JSON.stringify( storeCuerrentPlant )} */}
               </div>
             </>
           )}

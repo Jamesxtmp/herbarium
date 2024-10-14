@@ -6,6 +6,7 @@ import InputForm from "../components/InputForm";
 import CheckBoxFrom from "../components/CheckBoxFrom";
 import { useEffect, useState } from "react";
 import ButtomTypesGoogle from "../components/ButtomTypesGoogle";
+import { objectDeepEqual } from "../tools/objectDeepEqual";
 
 export default function ProvidersFrom () {
   const empyProvider = {
@@ -89,7 +90,7 @@ export default function ProvidersFrom () {
     setShowForm( true );
   };
   useEffect( () => {
-    if ( storeCuerrentProvider.id != "" ) {
+    if ( !objectDeepEqual( storeCuerrentProvider, empyProvider ) ) {
       setShowForm( true )
     }
   }, [] )
