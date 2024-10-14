@@ -20,13 +20,17 @@ export default function ProvidersFrom () {
     opinion_use_digital: "",
   }
   const { insertProvider, updateProvider, deleteProvider, getAllProviders } = supabseControls();
+
   const setInStoreProviders = useProvidersStore( ( state ) => state.setProviders );
   const deleteInStoreProviders = useProvidersStore( ( state ) => state.deleteProvider );
   const insertInStoreProviders = useProvidersStore( ( state ) => state.insertProvider );
   const updateInStoreProviders = useProvidersStore( ( state ) => state.updateProvider );
+  const handleCurrentProvider = useProvidersStore( ( state ) => state.handleCurrentProvider )
+  const storeCuerrentProvider = useProvidersStore( ( state ) => state.currentProvider )
+
+
   const storeProviders = useProvidersStore( ( state ) => state.providers );
 
-  const [provider, setProvider] = useState( null );
   const [eneableButtonInsert, setEneableButtonInsert] = useState( false );
   //-- Check boxes
   const [preserveKnowledge, setPreserveKnowledge] = useState( false );
@@ -36,75 +40,77 @@ export default function ProvidersFrom () {
   const handleStoreProviders = async () => {
     const allProviders = await getAllProviders();
     setInStoreProviders( allProviders );
-    setProvider( allProviders[0] );
   };
 
   const handleInsert = async () => {
     if ( preserveKnowledge && willingToTeach && agreeUseName ) {
-      const ansProvider = await insertProvider( provider ); // Retorna un arreglo
+      const ansProvider = await insertProvider( storeCuerrentProvider ); // Retorna un arreglo
       insertInStoreProviders( ansProvider[0] );
-      setProvider( ansProvider[0] );
       setEneableButtonInsert( false );
+
+      handleCurrentProvider( ansProvider[0] )
     } else {
       console.log( "Debes haceptar todos los acuerdos" )
     }
   };
 
   const handleUpdate = async () => {
-    const ansProvider = await updateProvider( provider.id, provider ); // Retorna un arreglo
+    const ansProvider = await updateProvider( storeCuerrentProvider.id, storeCuerrentProvider ); // Retorna un arreglo
     updateInStoreProviders( ansProvider[0] );
   };
 
   const handleDelete = async () => {
-    await deleteProvider( provider.id );
-    deleteInStoreProviders( provider.id );
-    setProvider( empyProvider );
+    if ( await deleteProvider( storeCuerrentProvider.id ) ) {
+      deleteInStoreProviders( storeCuerrentProvider.id );
+      handleCurrentProvider( empyProvider )
+    }
   };
 
-  const handleSelectChange = ( e ) => {
+  const handleSelectProviderChange = ( e ) => {
     const selectedProviderId = e.target.value;
-    if ( selectedProviderId === "0" ) {
-      setProvider( empyProvider );
+    if ( selectedProviderId === "" ) {
+      handleCurrentProvider( empyProvider )
     } else {
       const selectedProvider = storeProviders.find( ( provider ) => provider.id === Number( selectedProviderId ) );
-      setProvider( selectedProvider );
       setEneableButtonInsert( false );
+      handleCurrentProvider( selectedProvider )
+
     }
   };
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
-    setProvider( ( prevState ) => ( {
-      ...prevState,
-      [name]: value,
-    } ) );
+    handleCurrentProvider( {
+      ...storeCuerrentProvider,
+      [name]: value
+    } );
   };
 
   const handleNewProvider = () => {
-    setProvider( empyProvider );
     setEneableButtonInsert( true );
+    handleCurrentProvider( empyProvider )
   };
 
   useEffect( () => {
     handleStoreProviders();
   }, [] );
 
-  if ( !provider ) {
-    setProvider( empyProvider )
+  if ( !storeCuerrentProvider ) {
+    handleCurrentProvider( empyProvider )
   }
-  if ( provider ) {
+  if ( storeCuerrentProvider ) {
     return (
       <div className="flex justify-center items-center p-6">
         <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
-          <SelectForm name="providersSelect" options={storeProviders} onChange={handleSelectChange}>Informante:</SelectForm>
-          <InputForm name="name" value={provider.name} onChange={handleChange} >Nombre:</InputForm>
-          <SelectForm name="gender" value={provider.gender} options={["Masculino", "Femenino", "Otro"]} onChange={handleChange} >Genero:</SelectForm>
-          <InputForm name="occupation" value={provider.occupation} onChange={handleChange} >Ocupacion:</InputForm>
-          <InputForm name="residence" value={provider.residence} onChange={handleChange} >Comunidad o Localidad:</InputForm>
-          <SelectForm name="experience_time" value={provider.experience_time} options={["Menos de 5 años", "5 - 10 años", "10 - 20 años", "Mas de 20 años"]} onChange={handleChange} >Años usando plantas medicinales:</SelectForm>
-          <InputForm name="how_experence" value={provider.how_experence} onChange={handleChange} >Como adquirio su conocimiento:</InputForm>
-          <SelectForm name="opinion_use_plants" value={provider.opinion_use_plants} options={["Ha aumentado", "Ha disminuido", "Se ha mantenido igual"]} onChange={handleChange} >Cambio en el uso de plantas medicinales:</SelectForm>
-          <SelectForm name="opinion_use_digital" value={provider.opinion_use_digital} options={["Muy deacuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Muy en desacuerdo"]} onChange={handleChange} >Acuerdo con la difucion digital:</SelectForm>
+          <SelectForm name="providersSelect" value={storeCuerrentProvider.id} options={storeProviders} onChange={handleSelectProviderChange}>Informante:</SelectForm>
+          <InputForm name="name" value={storeCuerrentProvider.name} onChange={handleChange} >Nombre:</InputForm>
+          <SelectForm name="gender" value={storeCuerrentProvider.gender} options={["Masculino", "Femenino", "Otro"]} onChange={handleChange} >Genero:</SelectForm>
+          <InputForm name="occupation" value={storeCuerrentProvider.occupation} onChange={handleChange} >Ocupacion:</InputForm>
+          <InputForm name="residence" value={storeCuerrentProvider.residence} onChange={handleChange} >Comunidad o Localidad:</InputForm>
+          <SelectForm name="experience_time" value={storeCuerrentProvider.experience_time} options={["Menos de 5 años", "5 - 10 años", "10 - 20 años", "Mas de 20 años"]} onChange={handleChange} >Años usando plantas medicinales:</SelectForm>
+          <InputForm name="how_experence" value={storeCuerrentProvider.how_experence} onChange={handleChange} >Como adquirio su conocimiento:</InputForm>
+          <SelectForm name="opinion_use_plants" value={storeCuerrentProvider.opinion_use_plants} options={["Ha aumentado", "Ha disminuido", "Se ha mantenido igual"]} onChange={handleChange} >Cambio en el uso de plantas medicinales:</SelectForm>
+          <SelectForm name="opinion_use_digital" value={storeCuerrentProvider.opinion_use_digital} options={["Muy deacuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Muy en desacuerdo"]} onChange={handleChange} >Acuerdo con la difucion digital:</SelectForm>
 
           {eneableButtonInsert && (
             <div className="space-y-4">

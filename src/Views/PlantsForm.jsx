@@ -21,7 +21,7 @@ export default function PlantsForm () {
     warning: "",
     combination: "",
     provider: "",
-    image: "",
+    image: "https://ognhpnlmvmxlyzqlyolv.supabase.co/storage/v1/object/public/plants/depositphotos_383693018-stock-illustration-herbal-medicine-icon-vector-illustration.jpg",
   }
   const { insertPlant, updatePlant, deletePlant, getAllPlants, uploadImage, getAllProviders } = supabseControls()
 
@@ -30,10 +30,12 @@ export default function PlantsForm () {
   const insertInStorePlants = usePlantsStore( ( state ) => state.insertPlant )
   const updateInStorePlants = usePlantsStore( ( state ) => state.updatePlant )
   const storePlants = usePlantsStore( ( state ) => state.plants )
+  const handleCurrentPlant = usePlantsStore( ( state ) => state.handleCurrentPlant )
+  const storeCuerrentPlant = usePlantsStore( ( state ) => state.currentPlant )
+
   const storeProviders = useProvidersStore( ( state ) => state.providers )
   const setInStoreProviders = useProvidersStore( ( state ) => state.setProviders )
 
-  const [plant, setPlant] = useState( null )
   const [eneableButtonInsert, setEneableButtonInsert] = useState( false )
   const [image, setImage] = useState( null );
 
@@ -45,53 +47,54 @@ export default function PlantsForm () {
   const handleStorePlatns = async () => {
     const allPlants = await getAllPlants();
     setInStorePlants( allPlants )
-    setPlant( allPlants[0] )
   };
   const handleInsert = async () => {
-    const ansPlanta = await insertPlant( plant ) // Retorna un arreglo
+    const ansPlanta = await insertPlant( storeCuerrentPlant )
     insertInStorePlants( ansPlanta[0] )
-    setPlant( ansPlanta[0] )
     setEneableButtonInsert( false )
+    handleCurrentPlant( ansPlanta[0] )
   };
 
   const handleUpdate = async () => {
-    const ansPlanta = await updatePlant( plant.id, plant ) // Retorna un arreglo
+    const ansPlanta = await updatePlant( storeCuerrentPlant.id, storeCuerrentPlant )
     console.log( "crud ansUPDATE: ", ansPlanta[0] )
     updateInStorePlants( ansPlanta[0] )
   };
-  const handleDelete = async () => {
-    if ( await deletePlant( plant.id ) ) { // Retorna un arreglo
-      deleteInStorePlants( plant.id )
-      console.log( "crud DELETE:", storePlants[0] )
-      setPlant( storePlants[1] ? storePlants[1] : empyPlant );
-    }
-  };
 
-  const handleSelectChange = ( e ) => {
+  const handleDelete = async () => {
+    if ( await deletePlant( storeCuerrentPlant.id ) ) {
+      deleteInStorePlants( storeCuerrentPlant.id )
+      handleCurrentPlant( empyPlant )
+    }
+
+  };
+  const handleSelectedPlantChange = ( e ) => {
     const selectedPlantId = e.target.value;
-    if ( selectedPlantId === "" ) { setPlant( empyPlant ) }
+    if ( selectedPlantId === "" ) {
+      handleCurrentPlant( empyPlant )
+    }
     else {
       const selectedPlant = storePlants.find( plant => plant.id === Number( selectedPlantId ) );
-      setPlant( selectedPlant )
       setEneableButtonInsert( false )
+      handleCurrentPlant( selectedPlant )
+
     }
   };
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
-    setPlant( prevState => ( {
-      ...prevState,
+    handleCurrentPlant( {
+      ...storeCuerrentPlant,
       [name]: value
-    } ) );
-  }
+    } );
+  };
 
   const handleNewPlant = () => {
-    setPlant( empyPlant )
     setEneableButtonInsert( true )
+    handleCurrentPlant( empyPlant )
   }
   const handleImageChange = async ( event ) => {
     const selectedImage = event.target.files[0]
-    console.log( "supabase response: ", await uploadImage( selectedImage ) );
   };
 
 
@@ -100,27 +103,27 @@ export default function PlantsForm () {
     handleStoreProviders()
   }, [] );
 
-  if ( !plant ) {
-    setPlant( empyPlant )
+  if ( !storeCuerrentPlant ) {
+    handleCurrentPlant( empyPlant )
   }
-  if ( plant ) {
+  if ( storeCuerrentPlant ) {
     return (
       <div className="flex justify-center items-center p-6">
         <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-center mb-4">
-            <img className="w-24 h-36 object-cover rounded-md" src={plant.image} alt={plant.name} />
+            <img className="w-24 h-36 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
           </div>
 
-          <SelectForm name="plantsSelect" options={storePlants} onChange={handleSelectChange} >Planta:</SelectForm>
-          <InputForm name="name" value={plant.name} onChange={handleChange} >Nombre:</InputForm>
-          <InputForm name="another_name" value={plant.another_name} onChange={handleChange} >Nombre indigena/local/cientifico:</InputForm>
-          <InputForm name="use_part" value={plant.use_part} onChange={handleChange} >Parte utilizada:</InputForm>
-          <InputForm name="use" value={plant.use} onChange={handleChange} >Uso medicinal:</InputForm>
-          <InputForm name="preparation" value={plant.preparation} onChange={handleChange} >Preparacion:</InputForm>
-          <SelectForm name="frecuency" value={plant.frecuency} options={["Diario", "Semanal", "Mensual", "Ocacional"]} onChange={handleChange} >Frecuencia de uso:</SelectForm>
-          <InputForm name="warning" value={plant.warning} onChange={handleChange} >Efectos secundarios o advertencias:</InputForm>
-          <InputForm name="combination" value={plant.combination} onChange={handleChange} >Posible combinacion con otras plantas:</InputForm>
-          <SelectForm name="provider" value={plant.provider} options={storeProviders} onChange={handleChange} >Informante:</SelectForm>
+          <SelectForm name="plantsSelect" value={storeCuerrentPlant.id} options={storePlants} onChange={handleSelectedPlantChange}  >Planta:</SelectForm>
+          <InputForm name="name" value={storeCuerrentPlant.name} onChange={handleChange} >Nombre:</InputForm>
+          <InputForm name="another_name" value={storeCuerrentPlant.another_name} onChange={handleChange} >Nombre indigena/local/cientifico:</InputForm>
+          <InputForm name="use_part" value={storeCuerrentPlant.use_part} onChange={handleChange} >Parte utilizada:</InputForm>
+          <InputForm name="use" value={storeCuerrentPlant.use} onChange={handleChange} >Uso medicinal:</InputForm>
+          <InputForm name="preparation" value={storeCuerrentPlant.preparation} onChange={handleChange} >Preparacion:</InputForm>
+          <SelectForm name="frecuency" value={storeCuerrentPlant.frecuency} options={["Diario", "Semanal", "Mensual", "Ocacional"]} onChange={handleChange} >Frecuencia de uso:</SelectForm>
+          <InputForm name="warning" value={storeCuerrentPlant.warning} onChange={handleChange} >Efectos secundarios o advertencias:</InputForm>
+          <InputForm name="combination" value={storeCuerrentPlant.combination} onChange={handleChange} >Posible combinacion con otras plantas:</InputForm>
+          <SelectForm name="provider" value={storeCuerrentPlant.provider} options={storeProviders} onChange={handleChange} >Informante:</SelectForm>
 
           <div className="flex justify-between space-x-2">
             <button

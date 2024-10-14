@@ -2,6 +2,24 @@ import { create } from 'zustand';
 
 export const usePlantsStore = create( ( set ) => ( {
   plants: [],
+  currentPlant: {
+    id: "",
+    name: '',
+    another_name: "",
+    use_part: "",
+    use: "",
+    preparation: "",
+    frecuency: "",
+    warning: "",
+    combination: "",
+    provider: "",
+    image: "",
+  },
+
+  handleCurrentPlant: ( currentPlant ) => set( ( state ) => ( {
+    ...state,
+    currentPlant
+  } ) ),
 
   setPlants: ( plants ) => set( { plants } ),
 
@@ -23,7 +41,6 @@ export const usePlantsStore = create( ( set ) => ( {
     plants: state.plants.map( ( plant ) => {
       console.log( 'zustand UPDATE:', plant, "id: ", plant.id, "upbdate", plantUpdated, "upbdate id:", plantUpdated )
       return ( plant.id === plantUpdated.id ? plantUpdated : plant )
-    }
-    )
+    } )
   } ) )
 } ) );

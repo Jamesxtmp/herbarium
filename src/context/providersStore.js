@@ -2,6 +2,22 @@ import { create } from 'zustand';
 
 export const useProvidersStore = create( ( set ) => ( {
   providers: [],
+  currentProvider: {
+    id: "",
+    name: '',
+    gender: "",
+    occupation: "",
+    residence: "",
+    experience_time: 0,
+    how_experence: "",
+    opinion_use_plants: "",
+    opinion_use_digital: "",
+  },
+
+  handleCurrentProvider: ( currentProvider ) => set( ( state ) => ( {
+    ...state,
+    currentProvider
+  } ) ),
 
   setProviders: ( providers ) => set( { providers } ),
 
