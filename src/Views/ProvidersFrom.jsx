@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import supabseControls from "../hooks/supabseControls";
 import { useProvidersStore } from "../context/providersStore";
 import SelectForm from "../components/SelectForm";
@@ -46,8 +47,6 @@ export default function ProvidersFrom () {
       setEneableButtonInsert( false );
 
       handleCurrentProvider( ansProvider[0] )
-    } else {
-      console.log( "Debes haceptar todos los acuerdos" )
     }
   };
 
@@ -140,22 +139,28 @@ export default function ProvidersFrom () {
 
           <div className="flex justify-between space-x-2">
             <ButtomTypesGoogle
+              modalContent={eneableButtonInsert ? `¿Insertar el nuevo informante: ${storeCuerrentProvider.name}?` : null}
               type={eneableButtonInsert ? 'insert' : 'add'}
               onClick={eneableButtonInsert ? handleInsert : handleNewProvider}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-              disabled={eneableButtonInsert && !( preserveKnowledge && willingToTeach && agreeUseName )}
+              disabled={
+                eneableButtonInsert &&
+                ( objectDeepEqual( storeCuerrentProvider, empyProvider ) || !( preserveKnowledge && willingToTeach && agreeUseName ) )
+              }
             >
             </ButtomTypesGoogle>
-
+            {/* {`${eneableButtonInsert},${objectDeepEqual( storeCuerrentProvider, empyProvider )},${!( preserveKnowledge && willingToTeach && agreeUseName )}`} */}
             {!eneableButtonInsert && showForm && (
               <>
                 <ButtomTypesGoogle
+                  modalContent="¿Guardar los cambios?"
                   type="update"
                   onClick={handleUpdate}
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
                 >
                 </ButtomTypesGoogle>
                 <ButtomTypesGoogle
+                  modalContent={`¿Eliminar informante: ${storeCuerrentProvider.name}, permanentemente?`}
                   type="delete"
                   onClick={handleDelete}
                   className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"

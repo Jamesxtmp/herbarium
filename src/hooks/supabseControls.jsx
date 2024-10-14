@@ -1,6 +1,8 @@
 import { supabase } from "../context/supabaseCreator";
 
+
 export default function supabseControls () {
+  const VERBOSE = false
 
   async function getPlantById ( id ) {
     let { data: plant, error } = await supabase
@@ -29,7 +31,7 @@ export default function supabseControls () {
   }
 
   async function updatePlant ( id, updatedPlant ) {
-    console.log( "supabase UPDATE: ", id, updatedPlant );
+    VERBOSE && console.log( "supabase UPDATE: ", id, updatedPlant );
 
     const { name, another_name, use_part, use, preparation, frecuency, warning, combination, image, provider } = updatedPlant;
     const { data, error } = await supabase
@@ -48,13 +50,13 @@ export default function supabseControls () {
       .delete()
       .eq( 'id', id )
       .select();
-    console.log( data, error );
+    VERBOSE && console.log( data, error );
     if ( error ) { console.error( error ) }
     if ( !error ) { return data }
   }
 
   async function getAllPlants () {
-    console.log( "Pide todo" )
+    VERBOSE && console.log( "Pide todo" )
 
     let { data, error } = await supabase
       .from( 'plants' )
@@ -77,7 +79,7 @@ export default function supabseControls () {
   //Providers
   async function insertProvider ( provider ) {
     const { name, gender, occupation, residence, experience_time, how_experence, opinion_use_plants, opinion_use_digital } = provider;
-    console.log( "control: ", name, gender, occupation, residence, experience_time, how_experence, opinion_use_plants, opinion_use_digital )
+    VERBOSE && console.log( "control: ", name, gender, occupation, residence, experience_time, how_experence, opinion_use_plants, opinion_use_digital )
     const { data, error } = await supabase
       .from( 'providers' )
       .insert( [
@@ -89,7 +91,7 @@ export default function supabseControls () {
   }
 
   async function updateProvider ( id, updatedProvider ) {
-    console.log( "supabase UPDATE: ", id, updatedProvider );
+    VERBOSE && console.log( "supabase UPDATE: ", id, updatedProvider );
 
     const { name, gender, occupation, residence, experience_time, how_experence, opinion_use_plants, opinion_use_digital } = updatedProvider;
     const { data, error } = await supabase
@@ -102,13 +104,13 @@ export default function supabseControls () {
   }
 
   async function deleteProvider ( id ) {
-    console.log( id )
+    VERBOSE && console.log( id )
     const { data, error } = await supabase
       .from( 'providers' )
       .delete()
       .eq( 'id', id )
       .select();
-    console.log( data, error );
+    VERBOSE && console.log( data, error );
     if ( error ) { console.error( error ) }
     if ( !error ) { return data }
   }
