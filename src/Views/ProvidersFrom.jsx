@@ -94,6 +94,7 @@ export default function ProvidersFrom () {
   };
   useEffect( () => {
     if ( !objectDeepEqual( storeCuerrentProvider, empyProvider ) ) {
+      console.log( storeCuerrentProvider, storeCuerrentProvider )
       setShowForm( true )
     }
   }, [] )
@@ -104,7 +105,7 @@ export default function ProvidersFrom () {
   if ( storeCuerrentProvider ) {
     return (
       <div className="flex justify-center items-center p-6">
-        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+        <form className="w-full max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-md space-y-4"
           onSubmit={( e ) => {
             e.preventDefault();
           }}

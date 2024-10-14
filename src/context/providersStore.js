@@ -8,7 +8,7 @@ export const useProvidersStore = create( ( set ) => ( {
     gender: "",
     occupation: "",
     residence: "",
-    experience_time: 0,
+    experience_time: "",
     how_experence: "",
     opinion_use_plants: "",
     opinion_use_digital: "",

@@ -108,42 +108,42 @@ export default function PlantsForm () {
   if ( storeCuerrentPlant ) {
     return (
       <div className="flex justify-center items-center p-6">
-        <form className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+        <form
+          className="w-full max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-md space-y-4"
           onSubmit={( e ) => {
             e.preventDefault();
           }}
         >
           {showForm && (
-            <>
-              <div className="flex justify-center mb-4">
-                <img className="w-24 h-36 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
-                {/* {JSON.stringify( storeCuerrentPlant )} */}
-              </div>
-            </>
+            <div className="flex justify-center mb-4">
+              <img className="w-24 h-36 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
+            </div>
           )}
-          <SelectForm name="plantsSelect" value={storeCuerrentPlant.id} options={storePlants} onChange={handleSelectedPlantChange}  >Planta:</SelectForm>
+          <SelectForm name="plantsSelect" value={storeCuerrentPlant.id} options={storePlants} onChange={handleSelectedPlantChange}>Planta:</SelectForm>
+
           {showForm && (
             <>
-              <InputForm name="name" value={storeCuerrentPlant.name} onChange={handleChange} >Nombre:</InputForm>
-              <InputForm name="another_name" value={storeCuerrentPlant.another_name} onChange={handleChange} >Nombre indigena/local/cientifico:</InputForm>
-              <InputForm name="use_part" value={storeCuerrentPlant.use_part} onChange={handleChange} >Parte utilizada:</InputForm>
-              <InputForm name="use" value={storeCuerrentPlant.use} onChange={handleChange} >Uso medicinal:</InputForm>
-              <InputForm name="preparation" value={storeCuerrentPlant.preparation} onChange={handleChange} >Preparacion:</InputForm>
-              <SelectForm name="frecuency" value={storeCuerrentPlant.frecuency} options={["Diario", "Semanal", "Mensual", "Ocacional"]} onChange={handleChange} >Frecuencia de uso:</SelectForm>
-              <InputForm name="warning" value={storeCuerrentPlant.warning} onChange={handleChange} >Efectos secundarios o advertencias:</InputForm>
-              <InputForm name="combination" value={storeCuerrentPlant.combination} onChange={handleChange} >Posible combinacion con otras plantas:</InputForm>
-              <SelectForm name="provider" value={storeCuerrentPlant.provider} options={storeProviders} onChange={handleChange} >Informante:</SelectForm>
+              <InputForm name="name" value={storeCuerrentPlant.name} onChange={handleChange}>Nombre:</InputForm>
+              <InputForm name="another_name" value={storeCuerrentPlant.another_name} onChange={handleChange}>Nombre indígena/local/científico:</InputForm>
+              <InputForm name="use_part" value={storeCuerrentPlant.use_part} onChange={handleChange}>Parte utilizada:</InputForm>
+              <InputForm name="use" value={storeCuerrentPlant.use} onChange={handleChange}>Uso medicinal:</InputForm>
+              <InputForm name="preparation" value={storeCuerrentPlant.preparation} onChange={handleChange}>Preparación:</InputForm>
+              <SelectForm name="frecuency" value={storeCuerrentPlant.frecuency} options={["Diario", "Semanal", "Mensual", "Ocasional"]} onChange={handleChange}>Frecuencia de uso:</SelectForm>
+              <InputForm name="warning" value={storeCuerrentPlant.warning} onChange={handleChange}>Efectos secundarios o advertencias:</InputForm>
+              <InputForm name="combination" value={storeCuerrentPlant.combination} onChange={handleChange}>Posible combinación con otras plantas:</InputForm>
+              <SelectForm name="provider" value={storeCuerrentPlant.provider} options={storeProviders} onChange={handleChange}>Informante:</SelectForm>
             </>
           )}
+
           <div className="flex justify-between space-x-2">
             <ButtomTypesGoogle
-              modalContent={eneableButtonInsert ? `¿Insertar el nueva planta: ${storeCuerrentPlant.name}?` : null}
+              modalContent={eneableButtonInsert ? `¿Insertar nueva planta: ${storeCuerrentPlant.name}?` : null}
               type={eneableButtonInsert ? 'insert' : 'add'}
               onClick={eneableButtonInsert ? handleInsert : handleNewPlant}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
               disabled={eneableButtonInsert && objectDeepEqual( storeCuerrentPlant, empyPlant )}
-            >
-            </ButtomTypesGoogle>
+            />
+
             {!eneableButtonInsert && showForm && (
               <>
                 <ButtomTypesGoogle
@@ -151,15 +151,13 @@ export default function PlantsForm () {
                   type="update"
                   onClick={handleUpdate}
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
-                >
-                </ButtomTypesGoogle>
+                />
                 <ButtomTypesGoogle
-                  modalContent={`¿Eliminar informante: ${storeCuerrentPlant.name}, permanentemente?`}
+                  modalContent={`¿Eliminar planta: ${storeCuerrentPlant.name}, permanentemente?`}
                   type="delete"
                   onClick={handleDelete}
                   className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
-                >
-                </ButtomTypesGoogle>
+                />
               </>
             )}
           </div>
