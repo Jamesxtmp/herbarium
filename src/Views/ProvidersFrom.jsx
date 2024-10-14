@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
-import { useEffect, useState } from "react";
 import supabseControls from "../hooks/supabseControls";
 import { useProvidersStore } from "../context/providersStore";
 import SelectForm from "../components/SelectForm";
 import InputForm from "../components/InputForm";
 import CheckBoxFrom from "../components/CheckBoxFrom";
+import { useEffect, useState } from "react";
+import ButtomTypesGoogle from "../components/ButtomTypesGoogle";
 
 export default function ProvidersFrom () {
   const empyProvider = {
@@ -19,9 +19,8 @@ export default function ProvidersFrom () {
     opinion_use_plants: "",
     opinion_use_digital: "",
   }
-  const { insertProvider, updateProvider, deleteProvider, getAllProviders } = supabseControls();
+  const { insertProvider, updateProvider, deleteProvider } = supabseControls();
 
-  const setInStoreProviders = useProvidersStore( ( state ) => state.setProviders );
   const deleteInStoreProviders = useProvidersStore( ( state ) => state.deleteProvider );
   const insertInStoreProviders = useProvidersStore( ( state ) => state.insertProvider );
   const updateInStoreProviders = useProvidersStore( ( state ) => state.updateProvider );
@@ -32,15 +31,12 @@ export default function ProvidersFrom () {
   const storeProviders = useProvidersStore( ( state ) => state.providers );
 
   const [eneableButtonInsert, setEneableButtonInsert] = useState( false );
+  const [showForm, setShowForm] = useState( false );
   //-- Check boxes
   const [preserveKnowledge, setPreserveKnowledge] = useState( false );
   const [willingToTeach, setWillingToTeach] = useState( false );
   const [agreeUseName, setAgreeUseName] = useState( false );
 
-  const handleStoreProviders = async () => {
-    const allProviders = await getAllProviders();
-    setInStoreProviders( allProviders );
-  };
 
   const handleInsert = async () => {
     if ( preserveKnowledge && willingToTeach && agreeUseName ) {
@@ -70,11 +66,12 @@ export default function ProvidersFrom () {
     const selectedProviderId = e.target.value;
     if ( selectedProviderId === "" ) {
       handleCurrentProvider( empyProvider )
+      setShowForm( false );
     } else {
       const selectedProvider = storeProviders.find( ( provider ) => provider.id === Number( selectedProviderId ) );
       setEneableButtonInsert( false );
       handleCurrentProvider( selectedProvider )
-
+      setShowForm( true );
     }
   };
 
@@ -89,11 +86,13 @@ export default function ProvidersFrom () {
   const handleNewProvider = () => {
     setEneableButtonInsert( true );
     handleCurrentProvider( empyProvider )
+    setShowForm( true );
   };
-
   useEffect( () => {
-    handleStoreProviders();
-  }, [] );
+    if ( storeCuerrentProvider.id != "" ) {
+      setShowForm( true )
+    }
+  }, [] )
 
   if ( !storeCuerrentProvider ) {
     handleCurrentProvider( empyProvider )
@@ -103,14 +102,18 @@ export default function ProvidersFrom () {
       <div className="flex justify-center items-center p-6">
         <form className="space-y-4 bg-white p-6 rounded-lg shadow-md">
           <SelectForm name="providersSelect" value={storeCuerrentProvider.id} options={storeProviders} onChange={handleSelectProviderChange}>Informante:</SelectForm>
-          <InputForm name="name" value={storeCuerrentProvider.name} onChange={handleChange} >Nombre:</InputForm>
-          <SelectForm name="gender" value={storeCuerrentProvider.gender} options={["Masculino", "Femenino", "Otro"]} onChange={handleChange} >Genero:</SelectForm>
-          <InputForm name="occupation" value={storeCuerrentProvider.occupation} onChange={handleChange} >Ocupacion:</InputForm>
-          <InputForm name="residence" value={storeCuerrentProvider.residence} onChange={handleChange} >Comunidad o Localidad:</InputForm>
-          <SelectForm name="experience_time" value={storeCuerrentProvider.experience_time} options={["Menos de 5 años", "5 - 10 años", "10 - 20 años", "Mas de 20 años"]} onChange={handleChange} >Años usando plantas medicinales:</SelectForm>
-          <InputForm name="how_experence" value={storeCuerrentProvider.how_experence} onChange={handleChange} >Como adquirio su conocimiento:</InputForm>
-          <SelectForm name="opinion_use_plants" value={storeCuerrentProvider.opinion_use_plants} options={["Ha aumentado", "Ha disminuido", "Se ha mantenido igual"]} onChange={handleChange} >Cambio en el uso de plantas medicinales:</SelectForm>
-          <SelectForm name="opinion_use_digital" value={storeCuerrentProvider.opinion_use_digital} options={["Muy deacuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Muy en desacuerdo"]} onChange={handleChange} >Acuerdo con la difucion digital:</SelectForm>
+          {showForm && (
+            <>
+              <InputForm name="name" value={storeCuerrentProvider.name} onChange={handleChange} >Nombre:</InputForm>
+              <SelectForm name="gender" value={storeCuerrentProvider.gender} options={["Masculino", "Femenino", "Otro"]} onChange={handleChange} >Genero:</SelectForm>
+              <InputForm name="occupation" value={storeCuerrentProvider.occupation} onChange={handleChange} >Ocupacion:</InputForm>
+              <InputForm name="residence" value={storeCuerrentProvider.residence} onChange={handleChange} >Comunidad o Localidad:</InputForm>
+              <SelectForm name="experience_time" value={storeCuerrentProvider.experience_time} options={["Menos de 5 años", "5 - 10 años", "10 - 20 años", "Mas de 20 años"]} onChange={handleChange} >Años de experiecia usando plantas medicinales:</SelectForm>
+              <InputForm name="how_experence" value={storeCuerrentProvider.how_experence} onChange={handleChange} >Como adquirio su conocimiento:</InputForm>
+              <SelectForm name="opinion_use_plants" value={storeCuerrentProvider.opinion_use_plants} options={["Ha aumentado", "Ha disminuido", "Se ha mantenido igual"]} onChange={handleChange} >Cambio en el uso de plantas medicinales:</SelectForm>
+              <SelectForm name="opinion_use_digital" value={storeCuerrentProvider.opinion_use_digital} options={["Muy deacuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Muy en desacuerdo"]} onChange={handleChange} >Acuerdo con la difucion digital:</SelectForm>
+            </>
+          )}
 
           {eneableButtonInsert && (
             <div className="space-y-4">
@@ -127,31 +130,28 @@ export default function ProvidersFrom () {
           )}
 
           <div className="flex justify-between space-x-2">
-            <button
-              type="button"
+            <ButtomTypesGoogle
+              type={eneableButtonInsert ? 'insert' : 'add'}
               onClick={eneableButtonInsert ? handleInsert : handleNewProvider}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-              disabled={eneableButtonInsert && !( preserveKnowledge && willingToTeach )}
+              disabled={eneableButtonInsert && !( preserveKnowledge && willingToTeach && agreeUseName )}
             >
-              {eneableButtonInsert ? 'Insertar' : 'Nuevo Informante'}
-            </button>
+            </ButtomTypesGoogle>
 
-            {!eneableButtonInsert && (
+            {!eneableButtonInsert && showForm && (
               <>
-                <button
-                  type="button"
+                <ButtomTypesGoogle
+                  type="update"
                   onClick={handleUpdate}
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md"
                 >
-                  Actualizar
-                </button>
-                <button
-                  type="button"
+                </ButtomTypesGoogle>
+                <ButtomTypesGoogle
+                  type="delete"
                   onClick={handleDelete}
                   className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
                 >
-                  Eliminar
-                </button>
+                </ButtomTypesGoogle>
               </>
             )}
           </div>

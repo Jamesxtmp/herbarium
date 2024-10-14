@@ -1,8 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link, Route, Switch } from "wouter";
 import PlantsForm from "./Views/PlantsForm";
 import ProvidersFrom from "./Views/ProvidersFrom";
+import { useEffect } from "react";
+import supabseControls from "./hooks/supabseControls";
+import { useProvidersStore } from "./context/providersStore";
+import { usePlantsStore } from "./context/plantsStore";
+
+function Home () {
+  return (
+    <div>
+      <h1>Bienvenido a la Aplicación</h1>
+    </div>
+  );
+}
+
+function NotFound () {
+  return (
+    <div>
+      <h1>404: Página no encontrada</h1>
+      <p>Lo sentimos, la página que estás buscando no existe.</p>
+      <Link href="/" className="text-blue-500 underline">
+        Volver al inicio
+      </Link>
+    </div>
+  );
+}
 
 export default function App () {
+
+  const { getAllProviders, getAllPlants } = supabseControls()
+  const setInStoreProviders = useProvidersStore( ( state ) => state.setProviders )
+  const setInStorePlants = usePlantsStore( ( state ) => state.setPlants )
+
+  const handleStoreProviders = async () => {
+    const allProviders = await getAllProviders();
+    setInStoreProviders( allProviders );
+  };
+  const handleStorePlants = async () => {
+    const allPlants = await getAllPlants();
+    setInStorePlants( allPlants )
+  };
+
+  useEffect( () => {
+    handleStorePlants()
+    handleStoreProviders()
+  }, [] )
+
+
   return (
     <>
       <Link
@@ -18,20 +63,15 @@ export default function App () {
         Informantes
       </Link>
 
-      {/* 
-      Routes below are matched exclusively -
-      the first matched route gets rendered
-    */}
       <Switch>
+        <Route path="/" component={Home} />
         <Route path="/plantsform" component={PlantsForm} />
         <Route path="/providersform" component={ProvidersFrom} />
 
+        <Route component={NotFound} />
         {/* <Route path="/users/:name">
           {( params ) => <>Hello, {params.name}!</>}
         </Route> */}
-
-        {/* Default route in a switch */}
-        {/* <Route>404: No such page!</Route> */}
       </Switch>
     </>
   )

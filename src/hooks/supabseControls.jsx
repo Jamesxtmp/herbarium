@@ -54,6 +54,8 @@ export default function supabseControls () {
   }
 
   async function getAllPlants () {
+    console.log( "Pide todo" )
+
     let { data, error } = await supabase
       .from( 'plants' )
       .select( '*' );
