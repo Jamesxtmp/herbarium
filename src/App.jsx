@@ -8,6 +8,7 @@ import { useProvidersStore } from "./context/providersStore";
 import { usePlantsStore } from "./context/plantsStore";
 import Home from "./Views/Home";
 import { Settings } from "@mui/icons-material";
+import PlantDetail from "./Views/PlantDetail";
 
 function NotFound () {
   return (
@@ -90,6 +91,7 @@ export default function App () {
         <Route path="/" component={Home} />
         <Route path="/plantsform" component={PlantsForm} />
         <Route path="/providersform" component={ProvidersFrom} />
+        <Route path="/plant/:id" component={PlantDetail} />
 
         <Route component={NotFound} />
         {/* <Route path="/users/:name">

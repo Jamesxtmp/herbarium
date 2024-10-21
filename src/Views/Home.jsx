@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { usePlantsStore } from "../context/plantsStore"
+import { usePlantsStore } from "../context/plantsStore";
+import { useLocation } from 'wouter';
 
 export default function Home () {
   const allPlants = usePlantsStore( state => state.plants )
@@ -7,6 +8,7 @@ export default function Home () {
   const [filteredPlants, setFilteredPlants] = useState( allPlants );
   const [currentPage, setCurrentPage] = useState( 1 );
   const itemsPerPage = 6;
+  const [, setLocation] = useLocation();
 
   useEffect( () => {
     const searchWords = searchTerm.toLowerCase().split( /\s+/ ).filter( word => word.length > 0 );
@@ -27,9 +29,13 @@ export default function Home () {
 
   const totalPages = Math.ceil( filteredPlants.length / itemsPerPage );
 
+  const handlePlantClick = ( plantId ) => {
+    setLocation( `/plant/${plantId}` );
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-100 p-4">
-      {/* Search*/}
+      {/* Search and Filter */}
       <div className="bg-white p-4 shadow-sm">
         <input
           type="text"
@@ -45,10 +51,11 @@ export default function Home () {
         {currentPlants.map( ( plant ) => (
           <div
             key={plant.id}
-            className="bg-white border border-gray-200 p-4 rounded-md shadow-sm"
+            className="bg-white border border-gray-200 p-4 rounded-md shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200"
+            onClick={() => handlePlantClick( plant.id )}
           >
             <div className="flex">
-              <div className="bg-green-200 p-1 rounded-md flex-shrink-0">
+              <div className="shadow-md rounded-md flex-shrink-0">
                 <img src={plant.image} alt="Plant" className="w-24 h-24" />
               </div>
               <div className="ml-4">
