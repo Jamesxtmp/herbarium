@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-import Modal from '@mui/material/Modal'; // Asegúrate de que este componente esté instalado
+import Modal from '@mui/material/Modal';
 
 export default function ButtonWithModal ( {
   type = 'button',
