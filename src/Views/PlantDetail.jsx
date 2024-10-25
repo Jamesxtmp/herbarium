@@ -8,13 +8,14 @@ export default function PlantDetail () {
   const allPlants = usePlantsStore( state => state.plants );
   const allProviders = useProvidersStore( state => state.providers );
 
+  if ( !params ) {
+    return null
+  }
   const plant = allPlants.find( p => p.id === parseInt( params.id ) );
-
+  const provider = allProviders.find( p => p.id == plant.provider );
   if ( !plant ) {
     return <div>Planta no encontrada</div>;
   }
-
-  const provider = allProviders.find( p => p.id == plant.provider );
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
