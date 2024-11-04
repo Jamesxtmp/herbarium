@@ -116,7 +116,7 @@ export default function PlantsForm () {
         >
           {showForm && (
             <div className="flex justify-center mb-4">
-              <img className="w-24 h-36 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
+              <img className="max-w-48 object-cover rounded-md" src={storeCuerrentPlant.image} alt={storeCuerrentPlant.name} />
             </div>
           )}
           <SelectForm name="plantsSelect" value={storeCuerrentPlant.id} options={storePlants} onChange={handleSelectedPlantChange}>Planta:</SelectForm>
@@ -125,6 +125,7 @@ export default function PlantsForm () {
             <>
               <InputForm name="name" value={storeCuerrentPlant.name} onChange={handleChange}>Nombre:</InputForm>
               <InputForm name="another_name" value={storeCuerrentPlant.another_name} onChange={handleChange}>Nombre indígena/local/científico:</InputForm>
+              <InputForm name="image" value={storeCuerrentPlant.image} onChange={handleChange}>URL Imagen</InputForm>
               <InputForm name="use_part" value={storeCuerrentPlant.use_part} onChange={handleChange}>Parte utilizada:</InputForm>
               <InputForm name="use" value={storeCuerrentPlant.use} onChange={handleChange}>Uso medicinal:</InputForm>
               <InputForm name="preparation" value={storeCuerrentPlant.preparation} onChange={handleChange}>Preparación:</InputForm>

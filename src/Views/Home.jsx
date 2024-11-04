@@ -56,7 +56,7 @@ export default function Home () {
           >
             <div className="flex">
               <div className="shadow-md rounded-md flex-shrink-0">
-                <img src={plant.image} alt="Plant" className="w-24 h-24" />
+                <img src={plant.image} alt="Plant" className="w-24 h-24 object-cover" />
               </div>
               <div className="ml-4">
                 <h2 className="text-md font-semibold">{plant.name}</h2>
